@@ -1,8 +1,8 @@
-#CINEFLEX API
+# CINEFLEX API
 
 CineFlex API é uma aplicação que provê uma API para simular a compra de ingressos para um cinema. A API permite que o front-end da aplicação se comunique com o banco de dados para gerenciar os filmes, sessões, assentos e vendas.
 
-##Tecnologias utilizadas
+## Tecnologias utilizadas
 
     Node.js
     TypeScript
@@ -12,7 +12,7 @@ CineFlex API é uma aplicação que provê uma API para simular a compra de ingr
     Jest
     Supertest
 
-##Estrutura da aplicação
+## Estrutura da aplicação
 src/
 ├── controllers/
 │   ├── MovieController.ts
