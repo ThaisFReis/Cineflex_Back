@@ -69,6 +69,6 @@ src/\
     ├── session.ts\
     ├── seat.ts\
     ├── sale.ts\
-    └── user.ts\
+    └── user.ts
 
 
