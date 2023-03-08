@@ -14,18 +14,23 @@ CineFlex API é uma aplicação que provê uma API para simular a compra de ingr
 
 ## Estrutura da aplicação
 src/\
+├── config/\
+│   ├── database.ts\
+│   ├── env.ts\
+│   ├── index.ts\
+├── routers/\
+│   ├── MovieRouter.ts\
+│   ├── SeatRouter.ts\
+│   ├── SaleRouter.ts\
+│   ├── SessionRouter.ts\
+│   ├── UserRouter.ts\
+│   └── index.ts\
 ├── controllers/\
 │   ├── MovieController.ts\
 │   ├── SessionController.ts\
-│   ├── SeatController.ts\\
+│   ├── SeatController.ts\
 │   ├── SaleController.ts\
 │   └── UserController.ts\
-├── models/\
-│   ├── Movie.ts\
-│   ├── Session.ts\
-│   ├── Seat.ts\
-│   ├── Sale.ts\
-│   └── User.ts\
 ├── repositories/\
 │   ├── MovieRepository.ts\
 │   ├── SessionRepository.ts\
@@ -39,6 +44,12 @@ src/\
 │   ├── SeatService.ts\
 │   ├── SaleService.ts\
 │   └── UserService.ts\
+├── schema/\
+│   ├── MovieSchema.ts\
+│   ├── SessionSchema.ts\
+│   ├── SeatSchema.ts\
+│   ├── SaleSchema.ts\
+│   └── UserSchema.ts\
 ├── utils/\
 │   ├── ErrorHandler.ts\
 │   └── HttpException.ts\
@@ -64,11 +75,4 @@ src/\
 │       ├── errorHandler.test.ts\
 │       └── httpException.test.ts\
 └── types/\
-    ├── index.ts\
-    ├── movie.ts\
-    ├── session.ts\
-    ├── seat.ts\
-    ├── sale.ts\
-    └── user.ts
-
-
+    └── index.ts
