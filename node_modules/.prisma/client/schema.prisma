@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       Int     @id @default(autoincrement())
+  name     String? @db.VarChar(255)
+  email    String? @unique @db.VarChar(255)
+  password String? @db.VarChar(255)
+  sale     sale[]
+}
+
+model movie {
+  id      Int       @id @default(autoincrement())
+  title   String?   @db.VarChar(255)
+  poster  String?   @db.VarChar(255)
+  session session[]
+}
+
+model sale {
+  id             Int      @id @default(autoincrement())
+  sessionid      Int?
+  seatid         Int?
+  userid         Int?
+  price          Float?
+  tickettype     String?  @db.VarChar(255)
+  documenttype   String?  @db.VarChar(255)
+  documentnumber String?  @db.VarChar(255)
+  seat           seat?    @relation(fields: [seatid], references: [id], onDelete: Cascade, map: "fk_sale_seat")
+  session        session? @relation(fields: [sessionid], references: [id], onDelete: Cascade, map: "fk_sale_session")
+  User           User?    @relation(fields: [userid], references: [id], onDelete: Cascade, map: "fk_sale_user")
+}
+
+model seat {
+  id          Int      @id @default(autoincrement())
+  sessionid   Int?
+  rowseats    Int?
+  columnseats Int?
+  status      String?  @default("available") @db.VarChar(255)
+  seatid      Int?     @unique
+  sale        sale[]
+  session     session? @relation(fields: [sessionid], references: [id], onDelete: Cascade, map: "fk_seat_session")
+}
+
+model session {
+  id      Int       @id @default(autoincrement())
+  movieid Int?
+  time    DateTime? @db.Timestamp(6)
+  sale    sale[]
+  seat    seat[]
+  movie   movie?    @relation(fields: [movieid], references: [id], onDelete: Cascade, map: "fk_session_movie")
+}
