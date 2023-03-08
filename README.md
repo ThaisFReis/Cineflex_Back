@@ -17,7 +17,7 @@ src/\
 ├── controllers/\
 │   ├── MovieController.ts\
 │   ├── SessionController.ts\
-│   ├── SeatController.ts\\
+│   ├── SeatController.ts\
 │   ├── SaleController.ts\
 │   └── UserController.ts\
 ├── models/\
