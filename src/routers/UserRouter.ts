@@ -1,14 +1,13 @@
 import { Router } from 'express';
 import UserController from '../controllers/UserController';
+import UserMiddleware from '../middlewares/UserMiddleware';
 
 const userRouter = Router();
 
-const userController = new UserController();
-
 userRouter
-    .post('/users', userController.createUser)
-    .get('/users/:id', userController.getUserById)
-    .patch('/users/:id', userController.updateUser)
-    .delete('/users/:id', userController.deleteUser);
+    .post('/signup', UserMiddleware.validateCreateUser, UserController.createUser)
+    .post('/login', UserMiddleware.validateLogin, UserController.login, UserMiddleware.validateToken)
+    .put('/:id', UserMiddleware.validateUpdateUser, UserController.updateUser)
+    .delete('/:id', UserController.deleteUser, UserMiddleware.validateToken);
 
-export { userRouter}
+export { userRouter};

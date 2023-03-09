@@ -2,65 +2,90 @@
 
 
 import { User } from '@prisma/client'
+import * as bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
 import UserRepository from '../repositories/UserRepository'
-import { createUserSchema } from '../schema/UserSchema'
-import bcrypt from "bcrypt";
+import { HttpException } from '../utils/HttpException'
 
-export async function createUser({id, name, email, password}: User) {
-  await createUserSchema.validateAsync({ name, email, password });
 
-  await validateEmail(email);
-
-  const hashedPassword = await bcrypt.hash(password, 10);
-
-  return UserRepository.createUser({
-    id,
-    name,
-    email,
-    password: hashedPassword,
-  });
+async function hashPassword(password: string) {
+  return await bcrypt.hash(password, 10);
 }
 
-export async function validateEmail(email: string | undefined | null) {
-  if (!email) {
-    throw new Error("Email is required");
+async function validateEmail(user: User) {
+  const email = user.email;
+  if (email === undefined || email === null) {
+    throw new HttpException(400, 'Email is required');
   }
 
+  const userExists = await UserRepository.getUserByEmail(email);
+  if (userExists) {
+    throw new HttpException(400, 'Email already exists');
+  }
+
+  return true; // Retorna true para que o usuário possa ser criado
+}
+
+async function createUser (user: User) {
+  if (!user.password) {
+    throw new HttpException(400, 'Password is required');
+  }
+
+  await validateEmail(user);
+
+  const hashedPassword = await hashPassword(user.password);
+  user.password = hashedPassword;
+
+  return await UserRepository.createUser(user);
+}
+
+async function authenticateUser(email, password) {
   const user = await UserRepository.getUserByEmail(email);
-
-  if (user) {
-    throw new Error("Email already in use");
-  }
-}
-
-export async function getUserById(id: number) {
-  const user = await UserRepository.getUserById(id);
-
   if (!user) {
-    throw new Error("User not found");
+    throw new Error('User not found.');
   }
 
-  return user;
+  if(!user.password) {
+    throw new Error('Password not found.');
+  }
+
+  const isValidPassword = await bcrypt.compare(password, user.password);
+  if (!isValidPassword) {
+    throw new Error('Invalid password.');
+  }
+
+  if(!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET not found.');
+  }
+
+  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+    expiresIn: '1d'
+  });
+
+  return { user, token };
 }
 
-export async function updateUser(id: number, user: User) {
-  const updatedUser = await UserRepository.updateUser(id, user);
 
-  return updatedUser;
+async function updateUser(id: number, user: User) {
+  if (user.email) {
+    await validateEmail(user);
+  }
+
+  if (user.password) {
+    const hashedPassword = await hashPassword(user.password);
+    user.password = hashedPassword;
+  }
+
+  return await UserRepository.updateUser(id, user);
 }
 
-export async function deleteUser(id: number) {
-  const deletedUser = await UserRepository.deleteUser(id);
-
-  return deletedUser;
+async function deleteUser(id: number) {
+  return await UserRepository.deleteUser(id);
 }
 
-const UserService = {
+export default {
   createUser,
-  validateEmail,
-  getUserById,
+  authenticateUser,
   updateUser,
-  deleteUser,
-};
-
-export default UserService;
+  deleteUser
+}

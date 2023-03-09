@@ -3,40 +3,53 @@
 import { Request, Response } from 'express';
 import UserService from '../services/UserService';
 
-export default class UserController {
-  public async createUser(req: Request, res: Response): Promise<Response> {
-    try {
-      const user = await UserService.createUser(req.body);
-      return res.status(201).json(user);
-    } catch (err) {
-      return res.status(400).json({ error: err.message });
-    }
-  }
-
-  public async getUserById(req: Request, res: Response): Promise<Response> {
-    try {
-      const user = await UserService.getUserById(Number(req.params.id));
-      return res.json(user);
-    } catch (err) {
-      return res.status(404).json({ error: err.message });
-    }
-  }
-
-  public async updateUser(req: Request, res: Response): Promise<Response> {
-    try {
-      const user = await UserService.updateUser(Number(req.params.id), req.body);
-      return res.json(user);
-    } catch (err) {
-      return res.status(400).json({ error: err.message });
-    }
-  }
-
-  public async deleteUser(req: Request, res: Response): Promise<Response> {
-    try {
-      const result = await UserService.deleteUser(Number(req.params.id));
-      return res.json(result);
-    } catch (err) {
-      return res.status(400).json({ error: err.message });
-    }
+async function createUser(req: Request, res: Response) {
+  try {
+    const user = await UserService.createUser(req.body);
+    res.status(201).send(user);
+  } catch (error) {
+    res.status(400).send(error.message);
   }
 }
+
+async function login (req: Request, res: Response) {
+  try {
+    const { email, password } = req.body;
+    const result = await UserService.authenticateUser(email, password);
+    res.status(200).send(result);
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+}
+
+async function updateUser(req: Request, res: Response) {
+  try {
+    const userId = parseInt(req.params.id);
+    const user = await UserService.updateUser(userId, req.body);
+    res.status(200).send(user);
+  }
+  catch (error) {
+    res.status(400).send(error.message);
+  }
+}
+
+async function deleteUser(req: Request, res: Response) {
+  try {
+    const userId = parseInt(req.params.id);
+    const user = await UserService.deleteUser(userId);
+    res.status(200).send(user);
+  }
+  catch (error) {
+    res.status(400).send(error.message);
+  }
+}
+
+
+const UserController = {
+  createUser,
+  login,
+  updateUser,
+  deleteUser
+};
+
+export default UserController;

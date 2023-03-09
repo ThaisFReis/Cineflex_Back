@@ -7,7 +7,7 @@ async function createUser(user: User) {
   })
 }
 
-async function getUserByEmail(email: string) {
+async function getUserByEmail(email: string ) {
   return await prisma.user.findUnique({
     where: {
       email,
