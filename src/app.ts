@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import cors from "cors";
 import { loadEnv, connectDb, disconnectDb } from "./config"
-import { userRouter, movieRouter, seatRouter, sessionRouter } from "./routers";
+import { userRouter, movieRouter, seatRouter, sessionRouter, saleRouter } from "./routers";
 
 loadEnv();
 
@@ -13,7 +13,8 @@ app
   .use("/users", userRouter)
   .use("/movies", movieRouter)
   .use("/seats", seatRouter)
-  .use("/sessions", sessionRouter);
+  .use("/sessions", sessionRouter)
+  .use("/sales", saleRouter);
 
 export function init(): Promise<Express> {
   connectDb();
