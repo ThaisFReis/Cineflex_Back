@@ -8,6 +8,7 @@ userRouter
     .post('/signup', UserMiddleware.validateCreateUser, UserController.createUser)
     .post('/login', UserMiddleware.validateLogin, UserController.login, UserMiddleware.validateToken)
     .put('/:id', UserMiddleware.validateUpdateUser, UserController.updateUser)
-    .delete('/:id', UserController.deleteUser, UserMiddleware.validateToken);
+    .delete('/:id', UserController.deleteUser, UserMiddleware.validateToken)
+    .get('/', UserController.getUsers);
 
 export { userRouter};
