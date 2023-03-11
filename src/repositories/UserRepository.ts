@@ -40,12 +40,17 @@ async function deleteUser(id: number) {
   })
 }
 
+async function getAllUsers() {
+  return await prisma.user.findMany();
+}
+
 const UserRepository = {
   createUser,
   getUserByEmail,
   getUserById,
   updateUser,
   deleteUser,
+  getAllUsers,
 }
 
 export default UserRepository;
