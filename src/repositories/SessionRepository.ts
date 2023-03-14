@@ -1,7 +1,7 @@
-import { PrismaClient, session } from '@prisma/client';
+import { PrismaClient, Session } from '@prisma/client';
 const prisma = new PrismaClient()
 
-async function createSession(data: session): Promise<session> {
+async function createSession(data: Session): Promise<Session> {
     const session = await prisma.session.create({
         data: data
     })
@@ -9,7 +9,7 @@ async function createSession(data: session): Promise<session> {
     return session;
 }
 
-async function getSessionById(id: number): Promise<session> {
+async function getSessionById(id: number): Promise<Session> {
     const session = await prisma.session.findUnique({
         where: {
             id: id
@@ -19,13 +19,13 @@ async function getSessionById(id: number): Promise<session> {
     return session;
 }
 
-async function getAllSessions(): Promise<session[]> {
+async function getAllSessions(): Promise<Session[]> {
     const sessions = await prisma.session.findMany()
 
     return sessions;
 }
 
-async function updateSession(id: number, data: session): Promise<session> {
+async function updateSession(id: number, data: Session): Promise<Session> {
     const session = await prisma.session.update({
         where: {
             id: id
@@ -36,7 +36,7 @@ async function updateSession(id: number, data: session): Promise<session> {
     return session;
 }
 
-async function deleteSession(id: number): Promise<session> {
+async function deleteSession(id: number): Promise<Session> {
     const session = await prisma.session.delete({
         where: {
             id: id
