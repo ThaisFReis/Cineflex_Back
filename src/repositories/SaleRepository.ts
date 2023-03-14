@@ -1,7 +1,7 @@
-import { PrismaClient, sale } from '@prisma/client';
+import { PrismaClient, Sale } from '@prisma/client';
 const prisma = new PrismaClient()
 
-async function createSale(data: sale): Promise<sale> {
+async function createSale(data: Sale): Promise<Sale> {
     const sale = await prisma.sale.create({
         data: data
     })
@@ -9,7 +9,7 @@ async function createSale(data: sale): Promise<sale> {
     return sale;
 }
 
-async function getSaleById(id: number): Promise<sale> {
+async function getSaleById(id: number): Promise<Sale> {
     const sale = await prisma.sale.findUnique({
         where: {
             id: id
@@ -19,13 +19,13 @@ async function getSaleById(id: number): Promise<sale> {
     return sale;
 }
 
-async function getAllSales(): Promise<sale[]> {
+async function getAllSales(): Promise<Sale[]> {
     const sales = await prisma.sale.findMany()
 
     return sales;
 }
 
-async function updateSale(id: number, data: sale): Promise<sale> {
+async function updateSale(id: number, data: Sale): Promise<Sale> {
     const sale = await prisma.sale.update({
         where: {
             id: id
@@ -36,7 +36,7 @@ async function updateSale(id: number, data: sale): Promise<sale> {
     return sale;
 }
 
-async function deleteSale(id: number): Promise<sale> {
+async function deleteSale(id: number): Promise<Sale> {
     const sale = await prisma.sale.delete({
         where: {
             id: id

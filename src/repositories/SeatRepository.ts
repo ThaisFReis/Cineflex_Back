@@ -1,7 +1,7 @@
-import { PrismaClient, seat } from '@prisma/client';
+import { PrismaClient, Seat } from '@prisma/client';
 const prisma = new PrismaClient()
 
-async function createSeat(data: seat): Promise<seat> {
+async function createSeat(data: Seat): Promise<Seat> {
     const seat = await prisma.seat.create({
         data: data
     })
@@ -9,7 +9,7 @@ async function createSeat(data: seat): Promise<seat> {
     return seat;
 }
 
-async function getSeatById(id: number): Promise<seat> {
+async function getSeatById(id: number): Promise<Seat> {
     const seat = await prisma.seat.findUnique({
         where: {
             id: id
@@ -19,13 +19,13 @@ async function getSeatById(id: number): Promise<seat> {
     return seat;
 }
 
-async function getAllSeats(): Promise<seat[]> {
+async function getAllSeats(): Promise<Seat[]> {
     const seats = await prisma.seat.findMany()
 
     return seats;
 }
 
-async function updateSeat(id: number, data: seat): Promise<seat> {
+async function updateSeat(id: number, data: Seat): Promise<Seat> {
     const seat = await prisma.seat.update({
         where: {
             id: id
@@ -36,7 +36,7 @@ async function updateSeat(id: number, data: seat): Promise<seat> {
     return seat;
 }
 
-async function deleteSeat(id: number): Promise<seat> {
+async function deleteSeat(id: number): Promise<Seat> {
     const seat = await prisma.seat.delete({
         where: {
             id: id

@@ -1,7 +1,7 @@
-import { PrismaClient, movie } from '@prisma/client';
+import { PrismaClient, Movie } from '@prisma/client';
 const prisma = new PrismaClient()
 
-async function createMovie(movie: movie) {
+async function createMovie(movie: Movie) {
     return await prisma.movie.create({
         data: movie,
     })
@@ -19,7 +19,7 @@ async function getAllMovies() {
     return await prisma.movie.findMany()
 }
 
-async function updateMovie(id: number, movie: movie) {
+async function updateMovie(id: number, movie: Movie) {
     return await prisma.movie.update({
         where: {
             id,
