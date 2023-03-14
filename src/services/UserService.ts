@@ -83,8 +83,8 @@ async function deleteUser(id: number) {
   return await UserRepository.deleteUser(id);
 }
 
-async function getAllUsers() {
-  return await UserRepository.getAllUsers();
+async function getUsers() {
+  return await UserRepository.getUsers();
 }
 
 export default {
@@ -92,5 +92,5 @@ export default {
   authenticateUser,
   updateUser,
   deleteUser,
-  getAllUsers
+  getUsers
 }

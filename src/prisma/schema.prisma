@@ -8,50 +8,72 @@ datasource db {
 }
 
 model User {
-  id       Int     @id @default(autoincrement())
-  name     String? @db.VarChar(255)
-  email    String? @unique @db.VarChar(255)
-  password String? @db.VarChar(255)
-  sale     sale[]
+  id       Int        @id @default(autoincrement())
+  name     String
+  email    String     @unique
+  password String
+  sales    Sale[]
+  Document Document[]
 }
 
-model movie {
-  id      Int       @id @default(autoincrement())
-  title   String?   @db.VarChar(255)
-  poster  String?   @db.VarChar(255)
-  session session[]
+model Document {
+  id       Int          @id @default(autoincrement())
+  type     DocumentType // cpf ou rg
+  number   String
+  verified Boolean      @default(false)
+  user     User         @relation(fields: [userId], references: [id])
+  userId   Int
 }
 
-model sale {
-  id             Int      @id @default(autoincrement())
-  sessionid      Int?
-  seatid         Int?
-  userid         Int?
-  price          Float?
-  tickettype     String?  @db.VarChar(255)
-  documenttype   String?  @db.VarChar(255)
-  documentnumber String?  @db.VarChar(255)
-  seat           seat?    @relation(fields: [seatid], references: [id], onDelete: Cascade, map: "fk_sale_seat")
-  session        session? @relation(fields: [sessionid], references: [id], onDelete: Cascade, map: "fk_sale_session")
-  User           User?    @relation(fields: [userid], references: [id], onDelete: Cascade, map: "fk_sale_user")
+model Movie {
+  id       Int       @id @default(autoincrement())
+  title    String
+  poster   String?
+  sessions Session[]
 }
 
-model seat {
-  id          Int      @id @default(autoincrement())
-  sessionid   Int?
-  rowseats    Int?
-  columnseats Int?
-  status      String?  @default("available") @db.VarChar(255)
-  seatid      Int?     @unique
-  sale        sale[]
-  session     session? @relation(fields: [sessionid], references: [id], onDelete: Cascade, map: "fk_seat_session")
+model Session {
+  id      Int      @id @default(autoincrement())
+  date    DateTime
+  movie   Movie    @relation(fields: [movieId], references: [id])
+  movieId Int
+  seats   Seat[]
+  tickets Ticket[]
 }
 
-model session {
-  id      Int       @id @default(autoincrement())
-  movieid Int?
-  time    DateTime? @db.Timestamp(6)
-  sale    sale[]
-  seat    seat[]
-  movie   movie?    @relation(fields: [movieid], references: [id], onDelete: Cascade, map: "fk_session_movie")
+model Seat {
+  id         Int     @id @default(autoincrement())
+  row        Int
+  seatNumber Int
+  session    Session @relation(fields: [sessionId], references: [id])
+  sessionId  Int
+  sale       Sale    @relation(fields: [saleId], references: [id])
+  saleId     Int
+  Ticket     Ticket? @relation(fields: [ticketId], references: [id])
+  ticketId   Int?
+}
+
+model Ticket {
+  id        Int     @id @default(autoincrement())
+  type      Boolean @default(false) //False == inteira, True == Meia
+  session   Session @relation(fields: [sessionId], references: [id])
+  sessionId Int
+  seat      Seat[]
+  sale      Sale?   @relation(fields: [saleId], references: [id])
+  saleId    Int?
+}
+
+model Sale {
+  id      Int      @id @default(autoincrement())
+  date    DateTime @default(now())
+  total   Float
+  tickets Ticket[]
+  user    User     @relation(fields: [userId], references: [id])
+  userId  Int
+  Seat    Seat[]
+}
+
+enum DocumentType {
+  CPF
+  RG
 }

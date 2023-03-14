@@ -3,15 +3,6 @@
 import { Request, Response } from 'express';
 import UserService from '../services/UserService';
 
-async function getUsers(req: Request, res: Response) {
-  try {
-    const users = await UserService.getAllUsers();
-    res.status(200).send(users);
-  } catch (error) {
-    res.status(400).send(error.message);
-  }
-}
-
 async function createUser(req: Request, res: Response) {
   try {
     const user = await UserService.createUser(req.body);
@@ -53,13 +44,22 @@ async function deleteUser(req: Request, res: Response) {
   }
 }
 
+async function getUsers(req: Request, res: Response) {
+  try {
+    const users = await UserService.getUsers();
+    res.status(200).send(users);
+  }
+  catch (error) {
+    res.status(400).send(error.message);
+  }
+}
 
 const UserController = {
   createUser,
   login,
   updateUser,
   deleteUser,
-  getUsers,
+  getUsers
 };
 
 export default UserController;
