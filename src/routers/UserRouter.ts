@@ -1,14 +1,14 @@
 import { Router } from 'express';
 import UserController from '../controllers/UserController';
 import UserMiddleware from '../middlewares/UserMiddleware';
+import { authenticateToken } from '../middlewares/AuthMiddleware';
 
 const userRouter = Router();
 
 userRouter
     .post('/signup', UserMiddleware.validateCreateUser, UserController.createUser)
-    .post('/login', UserMiddleware.validateLogin, UserController.login, UserMiddleware.validateToken)
     .put('/:id', UserMiddleware.validateUpdateUser, UserController.updateUser)
-    .delete('/:id', UserController.deleteUser, UserMiddleware.validateToken)
-    .get('/', UserController.getUsers);
+    .delete('/:id', UserController.deleteUser, authenticateToken)
+    .get('/', UserController.getUsers, authenticateToken);
 
 export { userRouter};

@@ -1,7 +1,7 @@
 import express, { Express } from "express";
 import cors from "cors";
 import { loadEnv, connectDb, disconnectDb } from "./config"
-import { userRouter, movieRouter, seatRouter, sessionRouter, saleRouter } from "./routers";
+import { userRouter, movieRouter, seatRouter, sessionRouter, saleRouter, authRouter } from "./routers";
 
 loadEnv();
 
@@ -10,7 +10,9 @@ const app = express();
 app
   .use(cors())
   .use(express.json())
+  .get("/health", (_req, res) => res.send("OK!"))
   .use("/users", userRouter)
+  .use("/auth", authRouter)
   .use("/movies", movieRouter)
   .use("/seats", seatRouter)
   .use("/sessions", sessionRouter)

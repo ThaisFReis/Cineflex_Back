@@ -39,33 +39,6 @@ async function createUser (user: User) {
   return await UserRepository.createUser(user);
 }
 
-async function authenticateUser(email, password) {
-  const user = await UserRepository.getUserByEmail(email);
-  if (!user) {
-    throw new Error('User not found.');
-  }
-
-  if(!user.password) {
-    throw new Error('Password not found.');
-  }
-
-  const isValidPassword = await bcrypt.compare(password, user.password);
-  if (!isValidPassword) {
-    throw new Error('Invalid password.');
-  }
-
-  if(!process.env.JWT_SECRET) {
-    throw new Error('JWT_SECRET not found.');
-  }
-
-  const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-    expiresIn: '1d'
-  });
-
-  return { user, token };
-}
-
-
 async function updateUser(id: number, user: User) {
   if (user.email) {
     await validateEmail(user);
@@ -87,10 +60,14 @@ async function getUsers() {
   return await UserRepository.getUsers();
 }
 
+async function getUserById(id: number) {
+  return await UserRepository.getUserById(id);
+}
+
 export default {
   createUser,
-  authenticateUser,
   updateUser,
   deleteUser,
-  getUsers
+  getUsers,
+  getUserById
 }

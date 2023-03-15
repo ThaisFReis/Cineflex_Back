@@ -7,17 +7,8 @@ async function createUser(req: Request, res: Response) {
   try {
     const user = await UserService.createUser(req.body);
     res.status(201).send(user);
-  } catch (error) {
-    res.status(400).send(error.message);
   }
-}
-
-async function login (req: Request, res: Response) {
-  try {
-    const { email, password } = req.body;
-    const result = await UserService.authenticateUser(email, password);
-    res.status(200).send(result);
-  } catch (error) {
+  catch (error) {
     res.status(400).send(error.message);
   }
 }
@@ -56,7 +47,6 @@ async function getUsers(req: Request, res: Response) {
 
 const UserController = {
   createUser,
-  login,
   updateUser,
   deleteUser,
   getUsers
