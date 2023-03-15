@@ -37,42 +37,9 @@ async function validateUpdateUser(req: Request, res: Response, next: NextFunctio
     }
 }
 
-async function validateToken(req: Request, res: Response, next: NextFunction) {
-    try {
-        const authHeader = req.headers.authorization;
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-          throw new HttpException(401, 'Unauthorized');
-        }
-
-        const token = authHeader.split(' ')[1];
-        if (!token) {
-            throw new HttpException(401, 'Unauthorized');
-        }
-
-        const secret = process.env.JWT_SECRET;
-        if (!secret) {
-            throw new HttpException(500, 'Internal server error');
-        }
-
-        const decoded = verify(token, secret) as { id: number };
-
-        const user = await UserRepository.getUserById(decoded.id);
-        if (!user) {
-            next(new HttpException(401, 'Unauthorized'));
-        }
-
-        req.body.user = user;
-
-        next();
-    } catch (error) {
-        next(new HttpException(401, 'Unauthorized'));
-    }
-}
-
 const UserMiddleware = {
     validateCreateUser,
     validateUpdateUser,
-    validateToken,
     validateLogin
 };
 
