@@ -7,6 +7,7 @@ async function create(data: Prisma.TokenUncheckedCreateInput){
     })
 }
 
+
 const UserSessionRepository = {
     create,
 }

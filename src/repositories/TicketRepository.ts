@@ -1,57 +1,37 @@
-import { PrismaClient, Ticket } from '@prisma/client';
-const prisma = new PrismaClient()
+import { Ticket } from '@prisma/client';
+import { prisma } from '../config';
 
-async function createTicket(data: Ticket): Promise<Ticket> {
-    const ticket = await prisma.ticket.create({
-        data: data
-    })
-
-    return ticket;
+async function create (ticket: Ticket) {
+  return await prisma.ticket.create({ data: ticket });
 }
 
-async function getTicketById(id: number): Promise<Ticket> {
-    const ticket = await prisma.ticket.findUnique({
-        where: {
-            id: id
-        }
-    })
-
-    return ticket;
+async function findAll () {
+    return await prisma.ticket.findMany();
 }
 
-async function getAllTickets(): Promise<Ticket[]> {
-    const tickets = await prisma.ticket.findMany()
-
-    return tickets;
+async function findTicketById (id: number){
+    return await prisma.ticket.findUnique({ where: { id } });
 }
 
-async function updateTicket(id: number, data: Ticket): Promise<Ticket> {
-    const ticket = await prisma.ticket.update({
-        where: {
-            id: id
-        },
-        data: data
-    })
-
-    return ticket;
+async function updateTicket (id: number, ticket: Ticket) {
+    return await prisma.ticket.update({ where: { id }, data: ticket });
 }
 
-async function deleteTicket(id: number): Promise<Ticket> {
-    const ticket = await prisma.ticket.delete({
-        where: {
-            id: id
-        }
-    })
+async function deleteTicket (id: number) {
+    return await prisma.ticket.delete({ where: { id } });
+}
 
-    return ticket;
+async function ticketType (type: boolean) {
+    return await prisma.ticket.findMany({ where: { type } });
 }
 
 const TicketRepository = {
-    createTicket,
-    getTicketById,
-    getAllTickets,
+    create,
+    findAll,
+    findTicketById,
     updateTicket,
-    deleteTicket
+    deleteTicket,
+    ticketType
 }
 
 export default TicketRepository;

@@ -1,9 +1,15 @@
 import Joi from "joi";
 
-const DocumentSchema = Joi.object({
-    type: Joi.string().required(),
-    number: Joi.string().required(),
-    verified: Joi.boolean().required(),
+const RGSchema = Joi.object({
+    name: Joi.string().required(),
+    number: Joi.string().min(9).max(9).required(),
+    type: Joi.string().valid("RG").required(),
 });
 
-export default DocumentSchema;
+const CPFSchema = Joi.object({
+    name: Joi.string().required(),
+    number: Joi.string().min(11).max(11).required(),
+    type: Joi.string().valid("CPF").required(),
+});
+
+export { RGSchema, CPFSchema };
