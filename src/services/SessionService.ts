@@ -1,42 +1,42 @@
-import { session } from '@prisma/client'
+import { Session } from '@prisma/client'
 import SessionRepository from '../repositories/SessionRepository'
 import { HttpException } from '../utils/HttpException'
 
-async function createSession(data: session): Promise<session> {
-    const session = await SessionRepository.createSession(data)
-    return session;
+async function createSession(data: Session): Promise<Session> {
+    const Session = await SessionRepository.createSession(data)
+    return Session;
 }
 
-async function getSessionById(id: number): Promise<session> {
-    const session = await SessionRepository.getSessionById(id)
-    if (!session) {
+async function getSessionById(id: number): Promise<Session> {
+    const Session = await SessionRepository.getSessionById(id)
+    if (!Session) {
         throw new HttpException(404, 'Session not found');
     }
 
-    return session;
+    return Session;
 }
 
-async function getAllSessions(): Promise<session[]> {
+async function getAllSessions(): Promise<Session[]> {
     const sessions = await SessionRepository.getAllSessions()
     return sessions;
 }
 
-async function updateSession(id: number, data: session): Promise<session> {
-    const session = await SessionRepository.updateSession(id, data)
-    if (!session) {
+async function updateSession(id: number, data: Session): Promise<Session> {
+    const Session = await SessionRepository.updateSession(id, data)
+    if (!Session) {
         throw new HttpException(404, 'Session not found');
     }
 
-    return session;
+    return Session;
 }
 
-async function deleteSession(id: number): Promise<session> {
-    const session = await SessionRepository.deleteSession(id)
-    if (!session) {
+async function deleteSession(id: number): Promise<Session> {
+    const Session = await SessionRepository.deleteSession(id)
+    if (!Session) {
         throw new HttpException(404, 'Session not found'); 
     }
 
-    return session;
+    return Session;
 }
 
 const SessionService = {

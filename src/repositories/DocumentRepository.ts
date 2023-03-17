@@ -1,57 +1,42 @@
-import { PrismaClient, Document } from '@prisma/client';
-const prisma = new PrismaClient()
+import { Document } from '@prisma/client';
+import { prisma } from '../config';
 
-async function createDocument(data: Document): Promise<Document> {
-    const document = await prisma.document.create({
-        data: data
-    })
-
-    return document;
+async function create(data: Document) {
+  return prisma.document.create({
+    data,
+  });
 }
 
-async function getDocumentById(id: number): Promise<Document> {
-    const document = await prisma.document.findUnique({
+async function getDocumentById(id: number) {
+  return prisma.document.findUnique({
+    where: {
+      id,
+    },
+  });
+}
+
+async function updateDocumentById(id: number, data: Document) {
+    return prisma.document.update({
         where: {
-            id: id
-        }
-    })
-
-    return document;
-}
-
-async function getAllDocuments(): Promise<Document[]> {
-    const documents = await prisma.document.findMany()
-
-    return documents;
-}
-
-async function updateDocument(id: number, data: Document): Promise<Document> {
-    const document = await prisma.document.update({
-        where: {
-            id: id
+        id,
         },
-        data: data
-    })
-
-    return document;
+        data,
+    });
 }
 
-async function deleteDocument(id: number): Promise<Document> {
-    const document = await prisma.document.delete({
+async function deleteDocumentById(id: number) {
+    return prisma.document.delete({
         where: {
-            id: id
-        }
-    })
-
-    return document;
+        id,
+        },
+    });
 }
 
 const DocumentRepository = {
-    createDocument,
+    create,
     getDocumentById,
-    getAllDocuments,    
-    updateDocument,
-    deleteDocument
-}
+    updateDocumentById,
+    deleteDocumentById,
+};
 
 export default DocumentRepository;

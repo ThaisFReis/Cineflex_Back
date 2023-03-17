@@ -1,36 +1,36 @@
-import { movie } from '@prisma/client'
+import { Movie } from '@prisma/client'
 import MovieRepository from '../repositories/MovieRepository'
 import { HttpException } from '../utils/HttpException'
 
-async function createMovie(movie: movie) {
-    const movieExists = await MovieRepository.getMovieById(movie.id)
+async function createMovie(Movie: Movie) {
+    const movieExists = await MovieRepository.getMovieById(Movie.id)
     if (movieExists) {
         throw new HttpException(400, 'Movie already exists');
     }
 
-    return await MovieRepository.createMovie(movie);
+    return await MovieRepository.createMovie(Movie);
 }
 
 async function getMovieById(id: number) {
-    const movie = await MovieRepository.getMovieById(id)
-    if (!movie) {
+    const Movie = await MovieRepository.getMovieById(id)
+    if (!Movie) {
         throw new HttpException(404, 'Movie not found');
     }
 
-    return movie;
+    return Movie;
 }
 
 async function getAllMovies() {
     return await MovieRepository.getAllMovies();
 }
 
-async function updateMovie(id: number, movie: movie) {
+async function updateMovie(id: number, Movie: Movie) {
     const movieExists = await MovieRepository.getMovieById(id)
     if (!movieExists) {
         throw new HttpException(404, 'Movie not found');
     }
 
-    return await MovieRepository.updateMovie(id, movie);
+    return await MovieRepository.updateMovie(id, Movie);
 }
 
 async function deleteMovie(id: number) {

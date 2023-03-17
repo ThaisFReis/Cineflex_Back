@@ -1,32 +1,38 @@
 import { Document } from '@prisma/client'
 import DocumentRepository from '../repositories/DocumentRepository'
+import { HttpException } from '../utils/HttpException'
 
-async function createDocument(document: Document) {
-    return await DocumentRepository.createDocument(document);
-    }
+async function create(data: Document) {
+    return DocumentRepository.create(data)
+}
 
 async function getDocumentById(id: number) {
-    return await DocumentRepository.getDocumentById(id);
+    const document = await DocumentRepository.getDocumentById(id)
+    if (!document) {
+        throw new HttpException(404, 'Document not found')
+    }
+    return document
 }
 
-async function getAllDocuments() {
-    return await DocumentRepository.getAllDocuments();
-}
+async function updateDocumentById(id: number, data: Document) {
+    const document = await DocumentRepository.getDocumentById(id)
+    if (!document) {
+        throw new HttpException(404, 'Document not found')
+    }
+    return DocumentRepository.updateDocumentById(id, data)
+}   
 
-async function updateDocument(id: number, document: Document) {
-    return await DocumentRepository.updateDocument(id, document);
-}
-
-async function deleteDocument(id: number) {
-    return await DocumentRepository.deleteDocument(id);
+async function deleteDocumentById(id: number) {
+    const document = await DocumentRepository.getDocumentById(id)
+    if (!document) {
+        throw new HttpException(404, 'Document not found')
+    }
+    return DocumentRepository.deleteDocumentById(id)
 }
 
 const DocumentService = {
-    createDocument,
+    create,
     getDocumentById,
-    getAllDocuments,
-    updateDocument,
-    deleteDocument
+    updateDocumentById,
+    deleteDocumentById,
 }
-
-export default DocumentService;

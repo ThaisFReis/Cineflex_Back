@@ -1,42 +1,42 @@
-import { sale } from '@prisma/client'
+import { Sale } from '@prisma/client'
 import SaleRepository from '../repositories/SaleRepository'
 import { HttpException } from '../utils/HttpException'
 
-async function createSale(data: sale): Promise<sale> {
-    const sale = await SaleRepository.createSale(data)
-    return sale;
+async function createSale(data: Sale): Promise<Sale> {
+    const Sale = await SaleRepository.createSale(data)
+    return Sale;
 }
 
-async function getSaleById(id: number): Promise<sale> {
-    const sale = await SaleRepository.getSaleById(id)
-    if (!sale) {
+async function getSaleById(id: number): Promise<Sale> {
+    const Sale = await SaleRepository.getSaleById(id)
+    if (!Sale) {
         throw new HttpException(404, 'Sale not found');
     }
 
-    return sale;
+    return Sale;
 }
 
-async function getAllSales(): Promise<sale[]> {
+async function getAllSales(): Promise<Sale[]> {
     const sales = await SaleRepository.getAllSales()
     return sales;
 }
 
-async function updateSale(id: number, data: sale): Promise<sale> {
-    const sale = await SaleRepository.updateSale(id, data)
-    if (!sale) {
+async function updateSale(id: number, data: Sale): Promise<Sale> {
+    const Sale = await SaleRepository.updateSale(id, data)
+    if (!Sale) {
         throw new HttpException(404, 'Sale not found');
     }
 
-    return sale;
+    return Sale;
 }
 
-async function deleteSale(id: number): Promise<sale> {
-    const sale = await SaleRepository.deleteSale(id)
-    if (!sale) {
+async function deleteSale(id: number): Promise<Sale> {
+    const Sale = await SaleRepository.deleteSale(id)
+    if (!Sale) {
         throw new HttpException(404, 'Sale not found'); 
     }
 
-    return sale;
+    return Sale;
 }
 
 const SaleService = {

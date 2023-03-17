@@ -3,7 +3,7 @@ import * as jwt from "jsonwebtoken";
 import { prisma } from "../config";
 import { HttpException } from '../utils/HttpException';
 
-export async function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
+async function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.header("Authorization");
 
   if (!authHeader) {
@@ -34,9 +34,45 @@ export async function authenticateToken(req: AuthenticatedRequest, res: Response
   }
 }
 
+async function isExpired(token: string) {
+  const { exp } = jwt.verify(token, process.env.JWT_SECRET) as JWTPayload;
+  const userSession = await prisma.token.findFirst({
+    where: {
+      token
+    }
+  });
+
+  if (!userSession) {
+    throw new HttpException(401, "Invalid token");
+  }
+
+  const now = new Date().getTime() / 1000;
+  const isExpired = now > exp;
+
+  if (!isExpired) {
+    return false;
+  }
+
+  await prisma.token.delete({
+    where: {
+      token
+    }
+  });
+
+  return true;
+
+}
 
 export type AuthenticatedRequest = Request & JWTPayload;
 
 type JWTPayload = {
   userId: number;
+  exp: number;
 };
+
+const AuthMiddleware = {
+  authenticateToken,
+  isExpired,
+};
+
+export default AuthMiddleware;
