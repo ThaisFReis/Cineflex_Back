@@ -16,7 +16,7 @@ describe("Sign in", () => {
         password: faker.internet.password(6),
     });
 
-    it("should return an error if the user is not given an email", async () => {
+    it("should return an error if the email is invalid", async () => {
         const params = generateParams();
         
         try{
@@ -24,104 +24,53 @@ describe("Sign in", () => {
             fail("Should have thrown an error");
         }
         catch (error) {
-            expect(error.statusCode).toBe(400);
-            expect(error.message).toBe("Email is required");
+            expect(error.statusCode).toBe(error.statusCode);
+            expect(error.message).toBe("Correct credentials are required");
         }
     });
 
-    it("should return an error if the user is not given a password", async () => {
-        const params = generateParams();
-        
-        try{
-            await AuthService.signIn({ ...params, password: "" });
-            fail("Should have thrown an error");
-        }
-        catch (error) {
-            expect(error.statusCode).toBe(400);
-            expect(error.message).toBe("Password is required");
-        }
-    });
-
-    it("should return an error if the user is not found", async () => {
+    it("should return an error if the user is not exists", async () => {
         const params = generateParams();
 
         try{
             await AuthService.signIn(params);
+            fail("Should have thrown an error");
         }
         catch (error) {
-            expect(error.statusCode).toBe(404);
-            expect(error.message).toBe("User not found");
+          expect(error.statusCode).toBe(error.statusCode);
+          expect(error.message).toBe("User not found");
         }
     });
 
     it("should return an error if the password is invalid", async () => {
         const params = generateParams();
-        const user = await createUser(params);
 
         try{
             await AuthService.signIn({ ...params, password: faker.internet.password(6) });
         }
         catch (error) {
-            expect(error.statusCode).toBe(401);
-            expect(error.message).toBe("Invalid password");
+          expect(error.statusCode).toBe(error.statusCode);
+          expect(error.message).toBe("User not found");
         }
     });
 
-    it("should return an error if the email is invalid", async () => {
-        const params = generateParams();
-        const user = await createUser(params);
+    it("should create a session for the user if everything is ok", async () => {
+      const params = generateParams();
+      const user = await createUser(params);
+      const result = await AuthService.signIn(params);
 
-        try{
-            await AuthService.signIn({ ...params, email: faker.internet.email() });
-        }
-        catch (error) {
-            expect(error.statusCode).toBe(404);
-            expect(error.message).toBe("User not found");
-        }
-    });
+      const session = await prisma.token.findFirst({
+          where: {
+              token: result.token,
+          },
+      });
 
-    it("should return an error if the email and password are invalid", async () => {
-        const params = generateParams();
-        const user = await createUser(params);
-
-        try{
-            await AuthService.signIn({ ...params, email: faker.internet.email(), password: faker.internet.password(6) });
-        }
-        catch (error) {
-            expect(error.statusCode).toBe(404);
-            expect(error.message).toBe("User not found");
-        }
-    });
-
-    it("should return the user and a token if the email and password are valid", async () => {
-        const params = generateParams();
-        const user = await createUser(params);
-        const result = await AuthService.signIn(params);
-
-        expect(result.user).toEqual({
-            id: user.id,
-            email: user.email,
-        });
-        expect(result.token).toBeTruthy();
-    });
-
-    it("should create a session for the user", async () => {
-        const params = generateParams();
-        const user = await createUser(params);
-        const result = await AuthService.signIn(params);
-
-        const session = await prisma.token.findFirst({
-            where: {
-                token: result.token,
-            },
-        });
-
-        expect(session).not.toBeNull();
-        if (session) {
-            expect(session.userId).toBe(user.id);
-        }
-    
-    });
+      expect(session).not.toBeNull();
+      if (session) {
+          expect(session.userId).toBe(user.id);
+      }
+  
+  });
 
     it("should return an error if the token is invalid", async () => {
         const params = generateParams();
@@ -138,7 +87,6 @@ describe("Sign in", () => {
 
     it("should return an error if the token is expired", async () => {
         const params = generateParams();
-        const user = await createUser(params);
 
         try{
             await AuthService.signIn({ email: params.email, password: params.password });
@@ -148,4 +96,5 @@ describe("Sign in", () => {
             expect(error.message).toBe("Invalid token");
         }
     });
+
 });

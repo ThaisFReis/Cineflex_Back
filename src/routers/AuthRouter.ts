@@ -7,6 +7,6 @@ import { Router } from 'express';
 const authRouter = Router();
 
 authRouter
-    .post('/login', validateBody(loginSchema), signIn, AuthMiddleware.authenticateToken);
+    .post('/login', validateBody(loginSchema), signIn, AuthMiddleware.authenticateToken, AuthMiddleware.verifyEmailAndPassword);
 
 export { authRouter };

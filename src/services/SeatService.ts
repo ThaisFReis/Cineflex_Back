@@ -1,42 +1,42 @@
-import { seat } from '@prisma/client'
+import { Seat } from '@prisma/client'
 import SeatRepository from '../repositories/SeatRepository'
 import { HttpException } from '../utils/HttpException'
 
-async function createSeat(data: seat): Promise<seat> {
-    const seat = await SeatRepository.createSeat(data)
-    return seat;
+async function createSeat(data: Seat): Promise<Seat> {
+    const Seat = await SeatRepository.createSeat(data)
+    return Seat;
 }
 
-async function getSeatById(id: number): Promise<seat> {
-    const seat = await SeatRepository.getSeatById(id)
-    if (!seat) {
+async function getSeatById(id: number): Promise<Seat> {
+    const Seat = await SeatRepository.getSeatById(id)
+    if (!Seat) {
         throw new HttpException(404, 'Seat not found');
     }
 
-    return seat;
+    return Seat;
 }
 
-async function getAllSeats(): Promise<seat[]> {
+async function getAllSeats(): Promise<Seat[]> {
     const seats = await SeatRepository.getAllSeats()
     return seats;
 }
 
-async function updateSeat(id: number, data: seat): Promise<seat> {
-    const seat = await SeatRepository.updateSeat(id, data)
-    if (!seat) {
+async function updateSeat(id: number, data: Seat): Promise<Seat> {
+    const Seat = await SeatRepository.updateSeat(id, data)
+    if (!Seat) {
         throw new HttpException(404, 'Seat not found');
     }
 
-    return seat;
+    return Seat;
 }
 
-async function deleteSeat(id: number): Promise<seat> {
-    const seat = await SeatRepository.deleteSeat(id)
-    if (!seat) {
+async function deleteSeat(id: number): Promise<Seat> {
+    const Seat = await SeatRepository.deleteSeat(id)
+    if (!Seat) {
         throw new HttpException(404, 'Seat not found'); 
     }
 
-    return seat;
+    return Seat;
 }
 
 const SeatService = {
