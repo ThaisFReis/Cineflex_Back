@@ -7,25 +7,30 @@ import jwt from "jsonwebtoken"
 import { HttpException } from "../utils/HttpException";
 
 async function signIn(params: SignInParams): Promise<SignInResult> {
-    const { email, password } = params;
-    const user = await UserRepository.getUserByEmail(email);
+  const { email, password } = params;
+  
+  if (email === undefined || email === "" || password === undefined || password === "") {
+      throw new HttpException(400, "Correct credentials are required");
+  }
+  
+  const user = await UserRepository.getUserByEmail(email);
 
-    if (!user) {
-        throw new HttpException(404, "User not found");
-    }
+  if (!user) {
+      throw new HttpException(404, "User not found");
+  }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
+  const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) {
-        throw new HttpException(401, "Invalid password");
-    }
+  if (!isPasswordValid) {
+      throw new HttpException(400, "Correct credentials are required");
+  }
 
-    const token = await createSession(user.id);
+  const token = await createSession(user.id);
 
-    return {
-        user: exclude(user, "password"),
-        token,
-      };
+  return {
+      user: exclude(user, "password"),
+      token,
+  };
 }
 
 

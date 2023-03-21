@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express';
 import * as jwt from "jsonwebtoken";
 import { prisma } from "../config";
 import { HttpException } from '../utils/HttpException';
+import bcrypt from "bcrypt";
 
 async function authenticateToken(req: AuthenticatedRequest, res: Response, next: NextFunction) {
   const authHeader = req.header("Authorization");
@@ -63,6 +64,15 @@ async function isExpired(token: string) {
 
 }
 
+async function verifyEmailAndPassword(req: Request, res: Response, next: NextFunction) {
+  const { email, password } = req.body;
+  if (email ===  "" || email === undefined || password === "" || password === undefined) {
+    throw new HttpException(404, "Email and password are required");
+  }
+
+  next();
+}
+
 export type AuthenticatedRequest = Request & JWTPayload;
 
 type JWTPayload = {
@@ -73,6 +83,7 @@ type JWTPayload = {
 const AuthMiddleware = {
   authenticateToken,
   isExpired,
+  verifyEmailAndPassword
 };
 
 export default AuthMiddleware;
