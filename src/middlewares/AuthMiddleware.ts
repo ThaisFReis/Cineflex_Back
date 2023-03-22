@@ -60,8 +60,6 @@ async function isExpired(token: string) {
     }
   });
 
-  return true;
-
 }
 
 async function verifyEmailAndPassword(req: Request, res: Response, next: NextFunction) {

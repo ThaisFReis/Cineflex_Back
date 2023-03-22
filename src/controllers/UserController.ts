@@ -6,7 +6,10 @@ import UserService from '../services/UserService';
 async function createUser(req: Request, res: Response) {
   try {
     const user = await UserService.createUser(req.body);
-    res.status(201).send(user);
+    res.status(201).send({
+      name: user.name,
+      email: user.email
+    });
   }
   catch (error) {
     res.status(400).send(error.message);

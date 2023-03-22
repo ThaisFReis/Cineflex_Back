@@ -54,47 +54,49 @@ describe("Sign in", () => {
         }
     });
 
-    it("should create a session for the user if everything is ok", async () => {
-      const params = generateParams();
-      const user = await createUser(params);
-      const result = await AuthService.signIn(params);
+    describe("when the user is exists", () => {
 
-      const session = await prisma.token.findFirst({
-          where: {
-              token: result.token,
-          },
-      });
+        it("should create a session for the user if everything is ok", async () => {
+            const params = generateParams();
+            const user = await createUser(params);
+            const result = await AuthService.signIn(params);
 
-      expect(session).not.toBeNull();
-      if (session) {
-          expect(session.userId).toBe(user.id);
-      }
-  
-  });
+            const session = await prisma.token.findFirst({
+                where: {
+                    token: result.token,
+                },
+            });
 
-    it("should return an error if the token is invalid", async () => {
-        const params = generateParams();
-        const user = await createUser(params);
+            expect(session).not.toBeNull();
+            if (session) {
+                expect(session.userId).toBe(user.id);
+            }
+        });
 
-        try{
-            await AuthService.signIn({ email: params.email, password: params.password });
-        }
-        catch (error) {
-            expect(error.statusCode).toBe(401);
-            expect(error.message).toBe("Invalid token");
-        }
+        it("should return an error if the token is invalid", async () => {
+            const params = generateParams();
+            const user = await createUser(params);
+
+            try{
+                await AuthService.signIn({ email: params.email, password: params.password });
+            }
+            catch (error) {
+                expect(error.statusCode).toBe(401);
+                expect(error.message).toBe("Invalid token");
+            }
+        });
+
+        it("should return an error if the token is expired", async () => {
+            const params = generateParams();
+            const user = await createUser(params);
+
+            try{
+                await AuthService.signIn({ email: params.email, password: params.password });
+            }
+            catch (error) {
+                expect(error.statusCode).toBe(401);
+                expect(error.message).toBe("Expired token");
+            }
+        });
     });
-
-    it("should return an error if the token is expired", async () => {
-        const params = generateParams();
-
-        try{
-            await AuthService.signIn({ email: params.email, password: params.password });
-        }
-        catch (error) {
-            expect(error.statusCode).toBe(401);
-            expect(error.message).toBe("Invalid token");
-        }
-    });
-
 });
