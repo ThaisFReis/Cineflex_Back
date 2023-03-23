@@ -22,4 +22,4 @@ export async function createUser(params: Partial<User> = {}): Promise<User> {
     }
   
     return user;
-  }
+}

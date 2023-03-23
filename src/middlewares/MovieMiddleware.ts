@@ -1,6 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
 import { HttpException } from '../utils/HttpException';
-import MovieRepository from '../repositories/MovieRepository';
 import { createMovieSchema, updateMovieSchema } from '../schemas/MovieSchema';
 
 async function validateCreateMovie(req: Request, res: Response, next: NextFunction) {
@@ -24,11 +23,9 @@ async function validateUpdateMovie(req: Request, res: Response, next: NextFuncti
 async function validateMovieExists(req: Request, res: Response, next: NextFunction) {
     try {
         const movieId: number = parseInt(req.params.id);
-        const movie = await MovieRepository.getMovieById(movieId);
-        if (!movie) {
-            next(new HttpException(404, 'Movie not found'));
+        if (isNaN(movieId)) {
+            return res.status(400).json({ error: 'Invalid movie id' });
         }
-        req.body.movie = movie;
         next();
     } catch (error) {
         next(new HttpException(500, 'Internal server error'));

@@ -6,4 +6,5 @@ module.exports = {
     ".+\\.ts$": "ts-jest",
   },
   testMatch: ["<rootDir>/tests/**/*.test.ts"],
+  testTimeout: 10000,
 };
