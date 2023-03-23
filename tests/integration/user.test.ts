@@ -5,8 +5,6 @@ import { faker } from "@faker-js/faker";
 import httpStatus from "http-status";
 import { createUser } from "../factories";
 import { cleanDatabase } from "../utils/helpers";
-import UserController from '../../src/controllers/UserController';
-import { signIn } from '../../src/controllers/AuthController';
 
 beforeAll(async () => {
         await init();

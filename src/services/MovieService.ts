@@ -4,11 +4,11 @@ import { HttpException } from '../utils/HttpException'
 
 async function createMovie(Movie: Movie) {
     const movieExists = await MovieRepository.getMovieById(Movie.id)
-    if (movieExists) {
-        throw new HttpException(400, 'Movie already exists');
+    if (!movieExists) {
+        return await MovieRepository.createMovie(Movie);
     }
 
-    return await MovieRepository.createMovie(Movie);
+    throw new HttpException(409, 'Movie already exists');
 }
 
 async function getMovieById(id: number) {
@@ -21,7 +21,13 @@ async function getMovieById(id: number) {
 }
 
 async function getAllMovies() {
-    return await MovieRepository.getAllMovies();
+    const Movies = await MovieRepository.getAllMovies()
+    
+    if (!Movies) {
+        throw new HttpException(404, 'Movies not found');
+    }
+
+    return Movies;
 }
 
 async function updateMovie(id: number, Movie: Movie) {

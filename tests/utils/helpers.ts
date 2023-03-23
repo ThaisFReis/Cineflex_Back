@@ -5,7 +5,8 @@ import { createUser } from "../factories";
 
 export async function cleanDatabase(): Promise<void> {
     await prisma.token.deleteMany();
-  await prisma.user.deleteMany();
+    await prisma.user.deleteMany();
+    await prisma.movie.deleteMany();
 }
 
 export async function generateValidToken(user?: User): Promise<string> {

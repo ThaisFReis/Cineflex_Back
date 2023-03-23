@@ -10,7 +10,7 @@ async function createMovie(movie: Movie) {
 async function getMovieById(id: number) {
     return await prisma.movie.findUnique({
         where: {
-            id,
+            id: id,
         },
     })
 }
